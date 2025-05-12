@@ -32,8 +32,6 @@ The script can download the Cisco Umbrella top 1 million domains list or use a l
 ## Requirements
 
 -   Python 3.7+
--   `dnspython` library
--   `requests` library
 -   Docker (Optional, for running in a container)
 
 ## Installation
