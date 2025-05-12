@@ -31,36 +31,32 @@ The script can download the Cisco Umbrella top 1 million domains list or use a l
 
 ## Requirements
 
-The script requires Python 3.7+ and the following libraries:
+-   Python 3.7+
+-   `dnspython` library
+-   `requests` library
+-   Docker (Optional, for running in a container)
 
--   `dnspython` (for DNS resolution)
--   `requests` (for downloading the domain list)
+## Installation
 
-You can install them using pip:
+1.  **Clone the repository (if applicable):**
 
-    pip install dnspython requests
+        git clone https://github.com/blackboy69/dnstest.git
+        cd dnstest
+
+2.  **Install Python dependencies:**    
+    Then install using pip:
+
+        pip install -r requirements.txt
 
 ## How to Use
 
-1.  **Save the script**: Save the code as a Python file (e.g., `dns_tester.py`).
-2.  **Run the script**: Execute it from your terminal:
-
-        python dns_tester.py
-
-3.  **Enter Number of Domains**:
-    -   The script will first attempt to download or locate the `top-1m.csv` file.
-    -   It will then ask: `How many top domains do you want to test? (default: 10000):`
-    -   Press Enter to use the default, or type a number and press Enter.
-4.  **Enter DNS Servers**:
-    -   Next, it will ask: `Enter DNS server(s) to test, separated by commas (default: 192.168.0.2):`
-    -   Press Enter to use the default DNS server (`192.168.0.2`).
-    -   To test other servers, enter their IP addresses separated by commas (e.g., `8.8.8.8,1.1.1.1`).
-
-The test will then begin, showing live progress. Once completed, a summary of the results will be displayed.
+You can run the script directly using Python or build and run it inside a Docker container.
+    
+    python dnstest.py
 
 ## Configuration
 
-The following variables at the beginning of the script can be modified to change its default behavior:
+The following variables at the beginning of the `dns_tester.py` script can be modified to change its default behavior:
 
 -   `CISCO_UMBRELLA_URL`: URL to download the Cisco Umbrella top 1 million domains list.
     -   Default: `"https://s3-us-west-1.amazonaws.com/umbrella-static/top-1m.csv.zip"`
@@ -128,10 +124,10 @@ The script includes handling for various potential issues:
     -   `TIMEOUT` might be too short for some queries. Consider increasing it if many legitimate queries are timing out.
 -   **"No domains available to test. Exiting."**: This means neither the Cisco list nor the fallback list could be loaded. Check previous error messages for clues (e.g., download failure, CSV read error).
 -   **"CRITICAL: No DNS servers specified. Exiting."**: You did not provide any DNS server IPs when prompted, and the `DEFAULT_DNS_SERVER` might be empty or misconfigured.
+-   **Docker Output Issues**: If the script output doesn't appear correctly when running inside Docker, ensure the `Dockerfile` uses `ENTRYPOINT ["python", "-u", "dns_tester.py"]` to force unbuffered output.
 
 ## Note on Domain List
 
 -   The script attempts to use a dynamic list of popular domains (Cisco Umbrella top 1M) to provide a realistic test against frequently accessed sites.
 -   The domains are shuffled before testing to avoid any potential bias from the order in the list (e.g., if a DNS server caches sequentially).
 -   If you prefer to use a specific list of domains, you can modify the `get_domains_for_test()` function or prepare your own `top-1m.csv` file in the expected format (rank,domain_name).
-
